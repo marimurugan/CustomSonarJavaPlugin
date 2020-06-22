@@ -1,0 +1,11 @@
+whiteListVariables:
+    -   whiteClass: EmployeeService
+        whiteVariables: myDesiredVariable,myJObj
+    -   whiteClass: Employee
+        whiteVariables: name
+    -   whiteClass: EmployeeAutowiredByConstructorService
+        whiteVariables: employee
+
+        
+
+
