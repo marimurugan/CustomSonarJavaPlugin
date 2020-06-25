@@ -63,7 +63,7 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 
 	String classname = tree.simpleName().symbol().owner().name();
 	String variname = tree.simpleName().name();
-	String varitype = tree.simpleName().symbol().type().name();
+	String varitype = tree.type().toString();
 
 	if (whiteListParams.containsKey(classname)) {
 	    if (whiteListParams.get(classname).contains(variname) || whiteListInstance.contains(varitype)) {
@@ -95,7 +95,6 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 	}
 
 	else if ((tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM))) {
-
 	    isClassStack.push(tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM));
 	}
 	super.visitClass(tree);
