@@ -6,4 +6,4 @@ whiteListVariables:
     -   whiteClass: EmployeeAutowiredByConstructorService
         whiteVariables: employee
 whiteListClass: Employee
-whiteListInstance: Integer
+whiteListInstance: Integer,Logger

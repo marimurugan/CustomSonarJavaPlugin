@@ -65,11 +65,15 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 	String variname = tree.simpleName().name();
 	String varitype = tree.type().toString();
 
-	if (whiteListParams.containsKey(classname)) {
-	    if (whiteListParams.get(classname).contains(variname) || whiteListInstance.contains(varitype)) {
+	if (whiteListInstance.contains(varitype)) {
+	    isWhiteListed = true;
+	} else if (whiteListParams.containsKey(classname)) {
+	    if (whiteListParams.get(classname).contains(variname)) {
 		System.out.println("White Listed Variable Classname: " + classname + ", Type :" + varitype
 			+ ", Variable :" + variname);
 		isWhiteListed = true;
+	    } else {
+		isWhiteListed = false;
 	    }
 	}
 	return isWhiteListed;

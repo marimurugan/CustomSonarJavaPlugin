@@ -1,5 +1,8 @@
 package com.sample.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sample.model.Employee;
 
 public class EmployeeService {
@@ -10,6 +13,8 @@ public class EmployeeService {
 	
 	public Object myDesiredVariable;
 	
+	
+	 static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 	
 	
 	
