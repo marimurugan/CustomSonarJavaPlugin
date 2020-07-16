@@ -10,17 +10,17 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class ReadYamlUtil {
 
-    File file = new File("/appdata/sf/Devops/SonarQube/config/sonar_custom_java_whitelist.yaml");
+    File file = new File("/appdata/sf/Devops/SonarQube/config/sonar_custom_java_allowedlist.yaml");
 
     // Instantiating a new ObjectMapper as a YAMLFactory
     ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
-    public WhiteListVarVo readFromYaml() {
+    public AllowedVariablesVO readFromYaml() {
 
 	// Mapping the employee from the YAML file to the Employee class
-	WhiteListVarVo whiteListVo = null;
+	AllowedVariablesVO whiteListVo = null;
 	try {
-	    whiteListVo = om.readValue(file, WhiteListVarVo.class);
+	    whiteListVo = om.readValue(file, AllowedVariablesVO.class);
 	} catch (JsonParseException e) {
 
 	    e.printStackTrace();

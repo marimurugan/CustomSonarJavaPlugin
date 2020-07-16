@@ -1,9 +1,0 @@
-whiteListVariables:
-    -   whiteClass: EmployeeService
-        whiteVariables: myDesiredVariable
-    -   whiteClass: Employee
-        whiteVariables: name
-    -   whiteClass: EmployeeAutowiredByConstructorService
-        whiteVariables: employee
-whiteListClass: Employee
-whiteListInstance: Integer,Logger

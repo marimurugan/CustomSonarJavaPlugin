@@ -19,10 +19,10 @@ import org.sonar.plugins.java.api.tree.ModifiersTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
+import com.bsl.sonar.model.AllowedClassVariables;
+import com.bsl.sonar.model.AllowedVariablesVO;
 import com.bsl.sonar.model.ModifiersUtils;
 import com.bsl.sonar.model.ReadYamlUtil;
-import com.bsl.sonar.model.WhiteListVarVo;
-import com.bsl.sonar.model.WhiteListVariables;
 
 @Rule(key = "AvoidClassInstanceObject", name = "Variables should not be instantiated in class level", description = "Global variables are prohibitted in the BSL applications.", priority = Priority.BLOCKER, tags = {
 	"bug" })
@@ -35,21 +35,21 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 
     private JavaFileScannerContext context;
 
-    WhiteListVarVo whiteListVo = new WhiteListVarVo();
-    List<String> whiteListClass = new ArrayList<String>();
-    List<String> whiteListInstance = new ArrayList<String>();
+    AllowedVariablesVO allowedVariablesVo = new AllowedVariablesVO();
+    List<String> allowedClass = new ArrayList<String>();
+    List<String> allowedInstance = new ArrayList<String>();
 
     private void collectDataFromYaml() {
 
 	try {
-	    whiteListVo = new ReadYamlUtil().readFromYaml();
-	    whiteListClass = Arrays.asList(whiteListVo.getWhiteListClass().split(","));
-	    whiteListInstance = Arrays.asList(whiteListVo.getWhiteListInstance().split(","));
+	    allowedVariablesVo = new ReadYamlUtil().readFromYaml();
+	    allowedClass = Arrays.asList(allowedVariablesVo.getAllowedClass().split(","));
+	    allowedInstance = Arrays.asList(allowedVariablesVo.getAllowedInstance().split(","));
 
-	    List<WhiteListVariables> whiteListVars = whiteListVo.getWhiteListVariables();
+	    List<AllowedClassVariables> whiteListVars = allowedVariablesVo.getAllowedClassVariables();
 
-	    for (WhiteListVariables vars : whiteListVars) {
-		whiteListParams.put(vars.getWhiteClass(), Arrays.asList(vars.getWhiteVariables().split(",")));
+	    for (AllowedClassVariables vars : whiteListVars) {
+		whiteListParams.put(vars.getClassFile(), Arrays.asList(vars.getVariables().split(",")));
 	    }
 	    System.out.println("Data Collected from Yaml file ");
 	} catch (Exception e) {
@@ -65,12 +65,12 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 	String variname = tree.simpleName().name();
 	String varitype = tree.type().toString();
 
-	if (whiteListInstance.contains(varitype)) {
+	if (allowedInstance.contains(varitype)) {
 	    isWhiteListed = true;
 	} else if (whiteListParams.containsKey(classname)) {
 	    if (whiteListParams.get(classname).contains(variname)) {
-		System.out.println("White Listed Variable Classname: " + classname + ", Type :" + varitype
-			+ ", Variable :" + variname);
+		System.out.println("Skipped analyzing allowed Variable from ClassFile: " + classname + ", Type :"
+			+ varitype + ", Variable :" + variname);
 		isWhiteListed = true;
 	    } else {
 		isWhiteListed = false;
@@ -94,8 +94,8 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 
 	isVarStack.push(tree.is(Tree.Kind.INSTANCE_OF) || tree.is(Tree.Kind.VARIABLE));
 
-	if (whiteListClass.contains(className)) {
-	    System.out.println("WhiteListed Class :" + className);
+	if (allowedClass.contains(className)) {
+	    System.out.println("Skipped analyzing WhiteListed Class :" + className);
 	}
 
 	else if ((tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM))) {
