@@ -10,7 +10,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class ReadYamlUtil {
 
-    File file = new File("/appdata/sf/Devops/SonarQube/config/sonar_custom_java_allowedlist.yaml");
+    File file = new File("/appdata/sf/Devops/SonarQube/config/sonar_custom_java_allowed_objects.yaml");
 
     // Instantiating a new ObjectMapper as a YAMLFactory
     ObjectMapper om = new ObjectMapper(new YAMLFactory());

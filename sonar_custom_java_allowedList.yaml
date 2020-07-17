@@ -1,9 +1,0 @@
-allowedClassVariables:
-    -   classFile: EmployeeService
-        variables: myDesiredVariable
-    -   classFile: Employee
-        variables: name
-    -   classFile: EmployeeAutowiredByConstructorService
-        variables: employee
-allowedClass: Employee
-allowedInstance: Integer,Logger
