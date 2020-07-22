@@ -9,16 +9,18 @@ public class AllowedVariablesVO {
     }
 
     public AllowedVariablesVO(List<AllowedClassVariables> allowedClassVariables, String allowedClass,
-	    String allowedInstance) {
+	    String allowedInstance, String defaultVariables) {
 	super();
 	this.allowedClassVariables = allowedClassVariables;
 	this.allowedClass = allowedClass;
 	this.allowedInstance = allowedInstance;
+	this.defaultVariables = defaultVariables;
     }
 
     private List<AllowedClassVariables> allowedClassVariables;
     private String allowedClass;
     private String allowedInstance;
+    private String defaultVariables;
 
     public String getAllowedClass() {
 	return allowedClass;
@@ -36,18 +38,26 @@ public class AllowedVariablesVO {
 	this.allowedInstance = allowedInstance;
     }
 
-    @Override
-    public String toString() {
-	return "WhiteListVarVo [allowedClassVariables=" + allowedClassVariables + ", allowedClass=" + allowedClass
-		+ ", allowedInstance=" + allowedInstance + "]";
-    }
-
     public List<AllowedClassVariables> getAllowedClassVariables() {
 	return allowedClassVariables;
     }
 
     public void setAllowedClassVariables(List<AllowedClassVariables> allowedClassVariables) {
 	this.allowedClassVariables = allowedClassVariables;
+    }
+
+    public String getDefaultVariables() {
+	return defaultVariables;
+    }
+
+    public void setDefaultVariables(String defaultVariables) {
+	this.defaultVariables = defaultVariables;
+    }
+
+    @Override
+    public String toString() {
+	return "AllowedVariablesVO [allowedClassVariables=" + allowedClassVariables + ", allowedClass=" + allowedClass
+		+ ", allowedInstance=" + allowedInstance + ", defaultVariables=" + defaultVariables + "]";
     }
 
 }

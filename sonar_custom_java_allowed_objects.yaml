@@ -7,3 +7,4 @@ allowedClassVariables:
         variables: employee
 allowedClass: Employee
 allowedInstance: Integer,Logger
+defaultVariables: mycommon,mycommon1

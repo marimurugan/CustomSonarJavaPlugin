@@ -35,9 +35,10 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 
     private JavaFileScannerContext context;
 
-    AllowedVariablesVO allowedVariablesVo = new AllowedVariablesVO();
-    List<String> allowedClass = new ArrayList<String>();
-    List<String> allowedInstance = new ArrayList<String>();
+    private AllowedVariablesVO allowedVariablesVo = new AllowedVariablesVO();
+    private List<String> allowedClass = new ArrayList<String>();
+    private List<String> allowedInstance = new ArrayList<String>();
+    private List<String> defaultVariables = new ArrayList<String>();
 
     private void collectDataFromYaml() {
 
@@ -45,6 +46,7 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 	    allowedVariablesVo = new ReadYamlUtil().readFromYaml();
 	    allowedClass = Arrays.asList(allowedVariablesVo.getAllowedClass().split(","));
 	    allowedInstance = Arrays.asList(allowedVariablesVo.getAllowedInstance().split(","));
+	    defaultVariables = Arrays.asList(allowedVariablesVo.getDefaultVariables().split(","));
 
 	    List<AllowedClassVariables> whiteListVars = allowedVariablesVo.getAllowedClassVariables();
 
@@ -65,7 +67,9 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 	String variname = tree.simpleName().name();
 	String varitype = tree.type().toString();
 
-	if (allowedInstance.contains(varitype)) {
+	if (defaultVariables.contains(variname)) {
+	    isWhiteListed = true;
+	} else if (allowedInstance.contains(varitype)) {
 	    isWhiteListed = true;
 	} else if (whiteListParams.containsKey(classname)) {
 	    if (whiteListParams.get(classname).contains(variname)) {
