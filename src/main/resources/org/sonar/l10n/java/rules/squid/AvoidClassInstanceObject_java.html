@@ -1,11 +1,12 @@
-<p>This rule detects the variable instance in class level other than allowed list</p>
-<h2>Use only local variables</h2>
+<p>Avoid instance in Class root block</p>
+<h2>Restricting declaring/defining variables in class root </h2>
 <pre>
-For creating a thread safe web application, it is important to make sure the class level global variables are session/request scoped. 
-</pre>
-<h2>Compliant Solution</h2>
+We are restricting the definition/declaration of any variables in class root. <br/>
+It is advisable to use local variables while developing web applications.
+ </pre>
+<h2>Compliant Solutions</h2>
 <pre>
-Remove the Global Variable declaration or get approval from manager to add the variables to allowed list which is really required. 
+Follow the steps to fix
+ 1. Avoid using variables in class root and start using local variable.
+ 2. If it is really required for declaring variable in class root, reach PM/Lead to add this variable in allowed/exception list . 
 </pre>
-
-

@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -39,6 +40,11 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
     private List<String> allowedClass = new ArrayList<String>();
     private List<String> allowedInstance = new ArrayList<String>();
     private List<String> defaultVariables = new ArrayList<String>();
+
+    public AvoidClassInstanceObjectRule() {
+	super();
+	collectDataFromYaml();
+    }
 
     private void collectDataFromYaml() {
 
@@ -85,28 +91,31 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 
     @Override
     public void scanFile(JavaFileScannerContext context) {
-	collectDataFromYaml();
+
 	this.context = context;
 	scan(context.getTree());
     }
 
     @Override
     public void visitClass(ClassTree tree) {
-	String className = tree.simpleName().name();
 
-	System.out.println("Visiting Class :" + className);
+	try {
+	    String className = tree.simpleName().name();
+	    System.out.println("Visiting Class :" + className);
+	    isVarStack.push(tree.is(Tree.Kind.INSTANCE_OF) || tree.is(Tree.Kind.VARIABLE));
+	    if (allowedClass.contains(className)) {
+		System.out.println("Skipped analyzing Class --" + className + " -- as it is listed in allowed class");
+	    } else if ((tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM))) {
+		isClassStack.push(tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM));
+	    }
 
-	isVarStack.push(tree.is(Tree.Kind.INSTANCE_OF) || tree.is(Tree.Kind.VARIABLE));
-
-	if (allowedClass.contains(className)) {
-	    System.out.println("Skipped analyzing WhiteListed Class :" + className);
+	    super.visitClass(tree);
+	    isClassStack.pop();
+	} catch (NoSuchElementException e) {
+	    System.out.println("Class stack queue is empty");
+	} catch (Exception e) {
+	    System.out.println("Exception on visitClass :" + e.getMessage());
 	}
-
-	else if ((tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM))) {
-	    isClassStack.push(tree.is(Tree.Kind.CLASS) || tree.is(Tree.Kind.ENUM));
-	}
-	super.visitClass(tree);
-	isClassStack.pop();
     }
 
     @Override
@@ -115,14 +124,19 @@ public class AvoidClassInstanceObjectRule extends BaseTreeVisitor implements Jav
 	// ModifiersTree modifiers = tree.modifiers();
 	// List<AnnotationTree> annotations = modifiers.annotations();
 
-	if (isClass() && tree.parent().is(Tree.Kind.CLASS)) {
-	    if (!isWhiteListVariable(tree)) {
-		context.reportIssue(this, tree.simpleName(),
-			"Restricted to define " + tree.simpleName() + "  as Global variable." + " Parent Kind :"
-				+ tree.parent().kind() + ", Class Variable :" + tree.parent().is(Tree.Kind.CLASS));
+	try {
+
+	    if (isClass() && tree.parent().is(Tree.Kind.CLASS)) {
+		if (!isWhiteListVariable(tree)) {
+		    context.reportIssue(this, tree.simpleName(),
+			    "Restricted to define " + tree.simpleName() + "  as Global variable." + " Parent Kind :"
+				    + tree.parent().kind() + ", Class Variable :" + tree.parent().is(Tree.Kind.CLASS));
+		}
 	    }
+	    super.visitVariable(tree);
+	} catch (Exception e) {
+	    System.out.println("Excpetion on Visit Variable :" + e.getMessage());
 	}
-	super.visitVariable(tree);
     }
 
     private boolean isClass() {
